@@ -46,11 +46,11 @@
    "type": "MiniMaxH3Loop",
    "pos": [
     0,
-    260
+    140
    ],
    "size": [
     420,
-    60
+    90
    ],
    "flags": {},
    "order": 2,
@@ -85,7 +85,7 @@
    "type": "CLIPLoader",
    "pos": [
     0,
-    360
+    280
    ],
    "size": [
     420,
@@ -125,7 +125,7 @@
    "type": "VAELoader",
    "pos": [
     0,
-    510
+    440
    ],
    "size": [
     420,
@@ -165,7 +165,7 @@
    "type": "VAELoader",
    "pos": [
     0,
-    610
+    550
    ],
    "size": [
     420,
@@ -205,7 +205,7 @@
    "type": "LoadImage",
    "pos": [
     0,
-    710
+    660
    ],
    "size": [
     420,
@@ -242,7 +242,7 @@
    "id": 8,
    "type": "PrimitiveStringMultiline",
    "pos": [
-    460,
+    480,
     0
    ],
    "size": [
@@ -274,12 +274,12 @@
    "id": 9,
    "type": "MiniMaxH3ReferenceToVideo",
    "pos": [
-    460,
-    340
+    480,
+    350
    ],
    "size": [
     460,
-    300
+    350
    ],
    "flags": {},
    "order": 8,
@@ -349,7 +349,7 @@
    "id": 10,
    "type": "RandomNoise",
    "pos": [
-    960,
+    1000,
     0
    ],
    "size": [
@@ -381,8 +381,8 @@
    "id": 11,
    "type": "KSamplerSelect",
    "pos": [
-    960,
-    130
+    1000,
+    140
    ],
    "size": [
     320,
@@ -412,8 +412,8 @@
    "id": 12,
    "type": "BasicScheduler",
    "pos": [
-    960,
-    230
+    1000,
+    250
    ],
    "size": [
     320,
@@ -451,8 +451,8 @@
    "id": 13,
    "type": "BasicGuider",
    "pos": [
-    960,
-    380
+    1000,
+    410
    ],
    "size": [
     320,
@@ -490,8 +490,8 @@
    "id": 14,
    "type": "SamplerCustomAdvanced",
    "pos": [
-    960,
-    470
+    1000,
+    510
    ],
    "size": [
     320,
@@ -549,7 +549,7 @@
    "id": 15,
    "type": "MiniMaxH3LoopDecode",
    "pos": [
-    1320,
+    1380,
     0
    ],
    "size": [
@@ -603,12 +603,12 @@
    "id": 20,
    "type": "CreateVideo",
    "pos": [
-    1320,
-    340
+    1380,
+    350
    ],
    "size": [
     300,
-    130
+    150
    ],
    "flags": {},
    "order": 16,
@@ -657,7 +657,7 @@
    "id": 21,
    "type": "SaveVideo",
    "pos": [
-    1620,
+    1740,
     0
    ],
    "size": [
@@ -694,8 +694,8 @@
    "id": 22,
    "type": "MarkdownNote",
    "pos": [
-    460,
-    680
+    480,
+    750
    ],
    "size": [
     460,
@@ -710,7 +710,7 @@
     "Node name for S&R": "MarkdownNote"
    },
    "widgets_values": [
-    "## MiniMax H3 Loop (FastH3-Omni, 8 steps)\n\nSeamless loop without first/last frames. **MiniMax H3 Loop** samples the latent with its end wrapped around to its start, so the model joins the end to the start like any other cut-free stretch of video.\n\n**Length** must be 17k+5 frames. The loop is 17k frames:\n\n| length | loop | seconds |\n|---|---|---|\n| 158 | 153 | 6.4 |\n| 209 | 204 | 8.5 |\n| 260 | 255 | 10.6 |\n| 311 | 306 | 12.75 |\n| 362 | 357 | 14.9 |\n\nThese keep the audio loop exact. `pad_clips` adds 17 frames of wrapped context on each side while sampling, with `pad_clips` 1, 311 becomes 345 frames (within H3's 362-frame maximum) and 362 becomes 396 (past it), and longer runs are slower.\n\n**Prompt:** a loop has to end where it started.\n- Start with `Locked-off static camera, no pan, no zoom.`\n- One continuous or repeating action on a large, clear subject: pulsing, rotating, swaying, drifting, orbiting.\n- Keep light and environment steady. End with `Continuous, smooth, unbroken motion throughout.`\n- Avoid `[0s-2s]` timelines, \"then\"/\"begins\"/\"finally\", and one-way changes (lights switching on, things appearing, camera moves).\n- Fine turbulent texture (blowing sand, rain streaks, smoke) can pop at the loop point. Keep it secondary or try another seed.\n- Steady ambient sound loops invisibly; a single sound event repeats every loop.\n\nSee PROMPTING.md in the pack for the full guide and example prompts.\n\n**Reference image:** un-bypass Load Image and refer to it as `<Picture 1>` in the prompt. Prefer it to first/last frame or Add Guide anchors, which can make the loop point jump and the exposure drift.\n\n**Decode:** MiniMax H3 Loop Decode decodes with wrapped context on both sides and outputs exactly one loop of frames and audio.\n\n**Smoothing:** Loop Interpolate runs FILM or RIFE across the whole loop, including the last-to-first frames, and sets the video fps (24 x multiplier). H3 always generates at 24 fps; don't just raise the fps in Create Video, that only speeds the clip up.\n\n**Models** (put each in `ComfyUI/models/<folder>`; ComfyUI also offers to download missing ones):\n- `diffusion_models`: [fasth3_omniref_8step_pruned_int8_convrot.safetensors](https://huggingface.co/FastVideo/FastH3-Omni-Comfy/resolve/main/diffusion_models/fasth3_omniref_8step_pruned_int8_convrot.safetensors)\n- `text_encoders`: [qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors)\n- `vae`: [minimax_h3_video_vae_fp16.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors)\n- `vae`: [minimax_h3_audio_vae_fp32.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors)"
+    "## MiniMax H3 Loop (FastH3-Omni, 8 steps)\n\nSeamless loop without first/last frames. **MiniMax H3 Loop** samples the latent with its end wrapped around to its start, so the model joins the end to the start like any other cut-free stretch of video.\n\n**Length** must be 17k+5 frames. The loop is 17k frames:\n\n| length | loop | seconds |\n|---|---|---|\n| 107 | 102 | 4.25 |\n| 158 | 153 | 6.4 |\n| 209 | 204 | 8.5 |\n| 260 | 255 | 10.6 |\n| 311 | 306 | 12.75 |\n| 362 | 357 | 14.9 |\n\nThese keep the audio loop exact. `pad_clips` adds 17 frames of wrapped context on each side while sampling, with `pad_clips` 1, 311 becomes 345 frames (within H3's 362-frame maximum) and 362 becomes 396 (past it), and longer runs are slower.\n\n**Prompt:** a loop has to end where it started.\n- Start with `Locked-off static camera, no pan, no zoom.`\n- One continuous or repeating action on a large, clear subject: pulsing, rotating, swaying, drifting, orbiting.\n- Keep light and environment steady. End with `Continuous, smooth, unbroken motion throughout.`\n- Avoid `[0s-2s]` timelines, \"then\"/\"begins\"/\"finally\", and one-way changes (lights switching on, things appearing, camera moves).\n- Fine turbulent texture (blowing sand, rain streaks, smoke) can pop at the loop point. Keep it secondary or try another seed.\n- Steady ambient sound loops invisibly; a single sound event repeats every loop.\n\nSee PROMPTING.md in the pack for the full guide and example prompts.\n\n**Reference image:** un-bypass Load Image and refer to it as `<Picture 1>` in the prompt. Prefer it to first/last frame or Add Guide anchors, which can make the loop point jump and the exposure drift.\n\n**Decode:** MiniMax H3 Loop Decode decodes with wrapped context on both sides and outputs exactly one loop of frames and audio.\n\n**Smoothing:** Loop Interpolate runs FILM or RIFE across the whole loop, including the last-to-first frames, and sets the video fps (24 x multiplier). H3 always generates at 24 fps; don't just raise the fps in Create Video, that only speeds the clip up.\n\n**Models** (put each in `ComfyUI/models/<folder>`; ComfyUI also offers to download missing ones):\n- `diffusion_models`: [fasth3_omniref_8step_pruned_int8_convrot.safetensors](https://huggingface.co/FastVideo/FastH3-Omni-Comfy/resolve/main/diffusion_models/fasth3_omniref_8step_pruned_int8_convrot.safetensors)\n- `text_encoders`: [qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors)\n- `vae`: [minimax_h3_video_vae_fp16.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors)\n- `vae`: [minimax_h3_audio_vae_fp32.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors)"
    ],
    "title": "Note: MiniMax H3 Loop"
   },
@@ -718,7 +718,7 @@
    "id": 23,
    "type": "LoopInterpolate",
    "pos": [
-    1320,
+    1380,
     170
    ],
    "size": [
