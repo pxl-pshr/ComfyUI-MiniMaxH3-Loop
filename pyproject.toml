@@ -1,7 +1,7 @@
 [project]
 name = "minimaxh3-loop"
 description = "Seamless looping video with MiniMax H3 in ComfyUI: circular padding, loop decode, ControlNet restyling and loop-safe interpolation."
-version = "1.0.0"
+version = "1.0.1"
 license = {file = "LICENSE"} 
 # classifiers = [
 #     # For OS-independent nodes (works on all operating systems)
