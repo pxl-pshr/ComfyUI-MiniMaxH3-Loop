@@ -36,7 +36,7 @@ All in `example_workflows/`. Each has a note with lengths, prompting tips and se
 | `MiniMax-H3-Loop-FastH3.json` | FastH3-Omni | 8 | ~7 min |
 | `MiniMax-H3-Loop-Control.json` | ref2va + turbo LoRA + Fun ControlNet | 8 | ~4 min |
 
-\*Per loop on an RTX 4090, 1280×704, length 107, `views` 2 (Control uses `views` 1). The workflows default to 1344×768 and length 209, which take longer. The first three end in Loop Interpolate (FILM ×2, 48 fps).
+\*Per loop on an RTX 4090, 1280×704, length 107, `views` 2 (Control uses `views` 1). The workflows default to 1344×768 and length 158 (a 6.4 s loop), which takes a bit longer; the Control workflow defaults to length 107. The first three end in Loop Interpolate (FILM ×2, 48 fps).
 
 - **MiniMax-H3-Loop** (no LoRA): natural, photographic, the reference look. Smoothest on fast motion.
 - **Turbo** (ref2v turbo 8-step LoRA): the LoRA shifts the look, so the same seed gives a different shot. Fast motion can judder (every other frame nearly still), depending on seed.
