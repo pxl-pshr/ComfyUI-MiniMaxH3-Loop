@@ -1,1 +1,11 @@
-__pycache__/
+__pycache__
+/venv
+*.code-workspace
+.history
+.vscode
+*.ckpt
+*.pth
+types
+models
+.DS_Store
+node.zip
