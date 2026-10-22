@@ -27,10 +27,17 @@
     }
    ],
    "properties": {
-    "Node name for S&R": "UNETLoader"
+    "Node name for S&R": "UNETLoader",
+    "models": [
+     {
+      "name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "directory": "diffusion_models"
+     }
+    ]
    },
    "widgets_values": [
-    "minimax\\minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+    "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
     "default"
    ]
   },
@@ -65,10 +72,17 @@
     }
    ],
    "properties": {
-    "Node name for S&R": "LoraLoaderModelOnly"
+    "Node name for S&R": "LoraLoaderModelOnly",
+    "models": [
+     {
+      "name": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+      "url": "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+      "directory": "loras"
+     }
+    ]
    },
    "widgets_values": [
-    "minimax\\minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+    "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
     1.0
    ]
   },
@@ -136,7 +150,14 @@
     }
    ],
    "properties": {
-    "Node name for S&R": "CLIPLoader"
+    "Node name for S&R": "CLIPLoader",
+    "models": [
+     {
+      "name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "directory": "text_encoders"
+     }
+    ]
    },
    "widgets_values": [
     "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
@@ -170,10 +191,17 @@
     }
    ],
    "properties": {
-    "Node name for S&R": "VAELoader"
+    "Node name for S&R": "VAELoader",
+    "models": [
+     {
+      "name": "minimax_h3_video_vae_fp16.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors",
+      "directory": "vae"
+     }
+    ]
    },
    "widgets_values": [
-    "minimax\\minimax_h3_video_vae_fp16.safetensors"
+    "minimax_h3_video_vae_fp16.safetensors"
    ],
    "title": "Video VAE"
   },
@@ -203,10 +231,17 @@
     }
    ],
    "properties": {
-    "Node name for S&R": "VAELoader"
+    "Node name for S&R": "VAELoader",
+    "models": [
+     {
+      "name": "minimax_h3_audio_vae_fp32.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors",
+      "directory": "vae"
+     }
+    ]
    },
    "widgets_values": [
-    "minimax\\minimax_h3_audio_vae_fp32.safetensors"
+    "minimax_h3_audio_vae_fp32.safetensors"
    ],
    "title": "Audio VAE"
   },
