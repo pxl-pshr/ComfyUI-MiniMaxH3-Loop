@@ -6,7 +6,7 @@
    "id": 1,
    "type": "UNETLoader",
    "pos": [
-    0,
+    500,
     0
    ],
    "size": [
@@ -45,8 +45,8 @@
    "id": 3,
    "type": "MiniMaxH3Loop",
    "pos": [
-    0,
-    140
+    500,
+    136
    ],
    "size": [
     420,
@@ -84,8 +84,8 @@
    "id": 4,
    "type": "CLIPLoader",
    "pos": [
-    0,
-    280
+    500,
+    272
    ],
    "size": [
     420,
@@ -124,8 +124,8 @@
    "id": 5,
    "type": "VAELoader",
    "pos": [
-    0,
-    440
+    500,
+    428
    ],
    "size": [
     420,
@@ -164,8 +164,8 @@
    "id": 6,
    "type": "VAELoader",
    "pos": [
-    0,
-    550
+    500,
+    534
    ],
    "size": [
     420,
@@ -204,8 +204,8 @@
    "id": 7,
    "type": "LoadImage",
    "pos": [
-    0,
-    660
+    500,
+    640
    ],
    "size": [
     420,
@@ -242,7 +242,7 @@
    "id": 8,
    "type": "PrimitiveStringMultiline",
    "pos": [
-    480,
+    960,
     0
    ],
    "size": [
@@ -274,8 +274,8 @@
    "id": 9,
    "type": "MiniMaxH3ReferenceToVideo",
    "pos": [
-    480,
-    350
+    960,
+    346
    ],
    "size": [
     460,
@@ -349,7 +349,7 @@
    "id": 10,
    "type": "RandomNoise",
    "pos": [
-    1000,
+    1460,
     0
    ],
    "size": [
@@ -381,8 +381,8 @@
    "id": 11,
    "type": "KSamplerSelect",
    "pos": [
-    1000,
-    140
+    1460,
+    136
    ],
    "size": [
     320,
@@ -412,8 +412,8 @@
    "id": 12,
    "type": "BasicScheduler",
    "pos": [
-    1000,
-    250
+    1460,
+    242
    ],
    "size": [
     320,
@@ -451,8 +451,8 @@
    "id": 13,
    "type": "BasicGuider",
    "pos": [
-    1000,
-    410
+    1460,
+    398
    ],
    "size": [
     320,
@@ -490,8 +490,8 @@
    "id": 14,
    "type": "SamplerCustomAdvanced",
    "pos": [
-    1000,
-    510
+    1460,
+    494
    ],
    "size": [
     320,
@@ -549,7 +549,7 @@
    "id": 15,
    "type": "MiniMaxH3LoopDecode",
    "pos": [
-    1380,
+    1820,
     0
    ],
    "size": [
@@ -603,8 +603,8 @@
    "id": 20,
    "type": "CreateVideo",
    "pos": [
-    1380,
-    350
+    1820,
+    342
    ],
    "size": [
     300,
@@ -657,7 +657,7 @@
    "id": 21,
    "type": "SaveVideo",
    "pos": [
-    1740,
+    2160,
     0
    ],
    "size": [
@@ -694,12 +694,12 @@
    "id": 22,
    "type": "MarkdownNote",
    "pos": [
-    480,
-    750
+    0,
+    0
    ],
    "size": [
     460,
-    670
+    780
    ],
    "flags": {},
    "order": 18,
@@ -718,8 +718,8 @@
    "id": 23,
    "type": "LoopInterpolate",
    "pos": [
-    1380,
-    170
+    1820,
+    166
    ],
    "size": [
     300,

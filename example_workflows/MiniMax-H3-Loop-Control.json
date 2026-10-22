@@ -6,7 +6,7 @@
    "id": 1,
    "type": "UNETLoader",
    "pos": [
-    0,
+    500,
     0
    ],
    "size": [
@@ -45,8 +45,8 @@
    "id": 2,
    "type": "LoraLoaderModelOnly",
    "pos": [
-    0,
-    140
+    500,
+    136
    ],
    "size": [
     420,
@@ -90,8 +90,8 @@
    "id": 3,
    "type": "MiniMaxH3Loop",
    "pos": [
-    0,
-    280
+    500,
+    272
    ],
    "size": [
     420,
@@ -136,8 +136,8 @@
    "id": 4,
    "type": "CLIPLoader",
    "pos": [
-    0,
-    530
+    500,
+    514
    ],
    "size": [
     420,
@@ -176,8 +176,8 @@
    "id": 5,
    "type": "VAELoader",
    "pos": [
-    0,
-    690
+    500,
+    670
    ],
    "size": [
     420,
@@ -217,8 +217,8 @@
    "id": 6,
    "type": "VAELoader",
    "pos": [
-    0,
-    800
+    500,
+    776
    ],
    "size": [
     420,
@@ -257,7 +257,7 @@
    "id": 8,
    "type": "PrimitiveStringMultiline",
    "pos": [
-    960,
+    1420,
     0
    ],
    "size": [
@@ -289,8 +289,8 @@
    "id": 9,
    "type": "MiniMaxH3ReferenceToVideo",
    "pos": [
-    960,
-    350
+    1420,
+    346
    ],
    "size": [
     460,
@@ -372,7 +372,7 @@
    "id": 10,
    "type": "RandomNoise",
    "pos": [
-    1480,
+    1920,
     0
    ],
    "size": [
@@ -404,8 +404,8 @@
    "id": 11,
    "type": "KSamplerSelect",
    "pos": [
-    1480,
-    140
+    1920,
+    136
    ],
    "size": [
     320,
@@ -435,8 +435,8 @@
    "id": 12,
    "type": "BasicScheduler",
    "pos": [
-    1480,
-    250
+    1920,
+    242
    ],
    "size": [
     320,
@@ -474,8 +474,8 @@
    "id": 13,
    "type": "BasicGuider",
    "pos": [
-    1480,
-    410
+    1920,
+    398
    ],
    "size": [
     320,
@@ -513,8 +513,8 @@
    "id": 14,
    "type": "SamplerCustomAdvanced",
    "pos": [
-    1480,
-    510
+    1920,
+    494
    ],
    "size": [
     320,
@@ -572,7 +572,7 @@
    "id": 15,
    "type": "MiniMaxH3LoopDecode",
    "pos": [
-    1860,
+    2280,
     0
    ],
    "size": [
@@ -634,8 +634,8 @@
    "id": 20,
    "type": "CreateVideo",
    "pos": [
-    1860,
-    350
+    2280,
+    342
    ],
    "size": [
     300,
@@ -688,7 +688,7 @@
    "id": 21,
    "type": "SaveVideo",
    "pos": [
-    2220,
+    2620,
     0
    ],
    "size": [
@@ -725,12 +725,12 @@
    "id": 22,
    "type": "MarkdownNote",
    "pos": [
-    960,
-    710
+    0,
+    0
    ],
    "size": [
     460,
-    630
+    420
    ],
    "flags": {},
    "order": 23,
@@ -749,8 +749,8 @@
    "id": 23,
    "type": "LoopInterpolate",
    "pos": [
-    1860,
-    170
+    2280,
+    166
    ],
    "size": [
     300,
@@ -795,8 +795,8 @@
    "id": 30,
    "type": "ModelPatchLoader",
    "pos": [
-    0,
-    420
+    500,
+    408
    ],
    "size": [
     420,
@@ -833,7 +833,7 @@
    "id": 31,
    "type": "VHS_LoadVideoPath",
    "pos": [
-    480,
+    960,
     0
    ],
    "size": [
@@ -913,8 +913,8 @@
    "id": 32,
    "type": "MiniMaxH3LoopControlVideo",
    "pos": [
-    480,
-    336
+    960,
+    332
    ],
    "size": [
     420,
@@ -969,8 +969,8 @@
    "id": 33,
    "type": "MiniMaxH3FunControlNetApply",
    "pos": [
-    480,
-    546
+    960,
+    538
    ],
    "size": [
     420,
@@ -1037,8 +1037,8 @@
    "id": 40,
    "type": "PrimitiveInt",
    "pos": [
-    0,
-    910
+    500,
+    882
    ],
    "size": [
     420,
@@ -1071,8 +1071,8 @@
    "id": 41,
    "type": "PrimitiveInt",
    "pos": [
-    0,
-    1050
+    500,
+    1018
    ],
    "size": [
     420,
