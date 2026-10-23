@@ -23,7 +23,7 @@ Clone into `ComfyUI/custom_nodes` and restart ComfyUI:
 git clone https://github.com/pxl-pshr/ComfyUI-MiniMaxH3-Loop
 ```
 
-Requires a ComfyUI version with MiniMax H3 support. The example workflows show up in ComfyUI's template browser. They also use [ComfyUI-Frame-Interpolation](https://github.com/Fannovel16/ComfyUI-Frame-Interpolation) (Loop Interpolate), and the Control workflow uses [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) (Load Video Path).
+Requires ComfyUI v0.42.0 or newer. The example workflows show up in ComfyUI's template browser. They also use [ComfyUI-Frame-Interpolation](https://github.com/Fannovel16/ComfyUI-Frame-Interpolation) (Loop Interpolate), and the Control workflow uses [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) (Load Video Path).
 
 ## Example workflows
 

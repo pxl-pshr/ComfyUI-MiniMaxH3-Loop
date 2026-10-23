@@ -4,6 +4,7 @@ import comfy.patcher_extension
 import comfy.utils
 import nodes
 from comfy_extras.nodes_audio import vae_decode_audio
+from comfy_extras.nodes_minimax_h3 import MiniMaxH3FunControlPatch
 
 # H3 video latents come in 17-frame clips of 5 latent frames (1, 4, 4, 4, 4 pixel frames).
 # A 17k+5 frame video is 5k+2 latents: k clips plus a (1, 4) tail shaped like the first
@@ -84,15 +85,8 @@ def loop_wrapper(executor, x, timestep, context, transformer_options, **kwargs):
                        timestep, context, transformer_options, **args)
         return out[0][:, :, pv:pv + n].roll(-sv, dims=2), out[1][..., pa:pa + na].roll(-sa, dims=-1)
 
-    views = transformer_options["minimax_h3_loop_views"]
-    if views == 2:
-        # the Fun ControlNet encodes one unrotated control latent, which a rotated view would misalign
-        for w in comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, transformer_options):
-            if type(getattr(w, "__self__", None)).__name__ == "MiniMaxH3FunControlPatch":
-                raise ValueError("MiniMax H3 Loop views 2 can't be combined with the Fun ControlNet; set views to 1.")
-
     v, a = view(0)
-    if views == 2 and clips > 1:
+    if transformer_options["minimax_h3_loop_views"] == 2 and clips > 1:
         # a fixed second view with its wrap point half a loop away: H3 garbles audio next to the
         # duplicated wrap context, so each audio position takes its prediction mostly from the view
         # where it is far from that view's wrap point. The picture stays on the first view: the two
@@ -104,7 +98,18 @@ def loop_wrapper(executor, x, timestep, context, transformer_options, **kwargs):
     return [wrap_pad(v, 0, VIDEO_TAIL, 2), wrap_pad(a, 0, audio_tail, -1)]
 
 
+def has_fun_controlnet(wrappers):
+    return any(isinstance(getattr(w, "__self__", None), MiniMaxH3FunControlPatch) for w in wrappers)
+
+
 def loop_sampler_wrapper(executor, guider, sigmas, extra_args, callback, noise, *args, **kwargs):
+    model_options = extra_args["model_options"]
+    transformer_options = model_options["transformer_options"]
+    if transformer_options["minimax_h3_loop_views"] == 2 and has_fun_controlnet(
+            comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, model_options, is_model_options=True)):
+        # the Fun ControlNet encodes one unrotated control latent, which a rotated view would misalign
+        raise ValueError("MiniMax H3 Loop views 2 can't be combined with the Fun ControlNet; set views to 1.")
+
     # the sampler's video latent is sigma * noise + (1 - sigma) * clean, so adding
     # sigma * (fresh - noise) to the padding replaces its noise and keeps its content
     # with noise disabled (staged sampling) the latent's noise is unknown, so the padding keeps it
@@ -113,10 +118,10 @@ def loop_sampler_wrapper(executor, guider, sigmas, extra_args, callback, noise, 
     if torch.count_nonzero(video_noise) == 0:
         swap = video_noise
     else:
-        seed = ((extra_args.get("seed") or 0) + 1) % 2 ** 64
-        generator = torch.Generator(device=video_noise.device).manual_seed(seed)
-        swap = torch.randn(video_noise.shape, generator=generator, device=video_noise.device, dtype=video_noise.dtype) - video_noise
-    extra_args["model_options"]["transformer_options"]["minimax_h3_loop_noise_swap"] = swap
+        # drawn on the CPU like the sampler's own noise, so a seed gives the same padding noise on every device
+        generator = torch.Generator().manual_seed(((extra_args.get("seed") or 0) + 1) % 2 ** 64)
+        swap = torch.randn(video_noise.shape, generator=generator, dtype=video_noise.dtype).to(video_noise.device) - video_noise
+    transformer_options["minimax_h3_loop_noise_swap"] = swap
     return executor(guider, sigmas, extra_args, callback, noise, *args, **kwargs)
 
 
@@ -135,14 +140,13 @@ class MiniMaxH3Loop:
     RETURN_TYPES = ("MODEL",)
     FUNCTION = "patch"
     CATEGORY = "model/patch/minimax"
-    DESCRIPTION = "Generate a seamless loop by sampling the latent with its end wrapped around to its start. Set the latent length to 17k+5 frames (158, 209, 260, 311, 362); the loop is 17k frames. Decode with MiniMax H3 Loop Decode."
+    DESCRIPTION = "Generate a seamless loop by sampling the latent with its end wrapped around to its start. Set the latent length to 17k+5 frames (107, 158, 209, 260, 311, 362); the loop is 17k frames. Decode with MiniMax H3 Loop Decode."
 
     def patch(self, model, pad_clips, views=2):
         # the Fun ControlNet sizes its control latent from the input it sees, so it has to
         # sit inside the loop padding: this patch must be applied first
-        for w in model.get_all_wrappers(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL):
-            if type(getattr(w, "__self__", None)).__name__ == "MiniMaxH3FunControlPatch":
-                raise ValueError("Apply MiniMax H3 Loop before Apply MiniMax H3 Fun ControlNet: chain model -> MiniMax H3 Loop -> Apply MiniMax H3 Fun ControlNet.")
+        if has_fun_controlnet(model.get_all_wrappers(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL)):
+            raise ValueError("Apply MiniMax H3 Loop before Apply MiniMax H3 Fun ControlNet: chain model -> MiniMax H3 Loop -> Apply MiniMax H3 Fun ControlNet.")
         model = model.clone()
         model.model_options["transformer_options"]["minimax_h3_loop_pad_clips"] = pad_clips
         model.model_options["transformer_options"]["minimax_h3_loop_views"] = views
