@@ -5,6 +5,7 @@
 - The padding's fresh noise is drawn on the CPU like the sampler's own noise, so a seed gives the same result on every device.
 - The views 2 / Fun ControlNet check runs once per sampling run instead of on every model call, and both ControlNet checks use the patch class instead of its name.
 - MiniMax H3 Loop lists 107 among the exact-audio lengths.
+- README: prompting and settings guidance moved up into a "Getting a clean loop" section right after Install.
 - pyproject.toml: `requires-comfyui >=0.42.0`, documentation link to the README, template leftovers removed.
 
 ## 1.0.0

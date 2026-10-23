@@ -8,13 +8,6 @@ Seamless looping video with MiniMax H3 in ComfyUI. No first frame / last frame, 
 | **Rocking chair** | **Koi pond** |
 | ![Grandpa in a rocking chair, seamless loop](docs/rocking_chair_grandpa.gif) | ![Koi pond, seamless loop](docs/koi_pond.gif) |
 
-## Nodes
-
-- **MiniMax H3 Loop** (model patch): samples the latent with its end wrapped around to its start, so the model joins the end to the start like any other part of the video. `views` 2 (default) also samples a half-rotated view and takes the audio around the loop point from it, which keeps the sound clean there; costs about 1.8× sampling time. Use `views` 1 with the Fun ControlNet.
-- **MiniMax H3 Loop Decode**: decodes the loop with wrapped context on both sides and outputs exactly one loop of frames and audio.
-- **MiniMax H3 Loop Control Video**: fits an existing seamless loop (for example a 3D depth pass) to the H3 loop as the control video for Apply MiniMax H3 Fun ControlNet. See [Restyling a loop with ControlNet](#restyling-a-loop-with-controlnet).
-- **Loop Interpolate**: FILM or RIFE frame interpolation across the whole loop, including the frames between the last frame and the first. Outputs the new fps for Create Video. Needs [ComfyUI-Frame-Interpolation](https://github.com/Fannovel16/ComfyUI-Frame-Interpolation).
-
 ## Install
 
 Clone into `ComfyUI/custom_nodes` and restart ComfyUI:
@@ -24,6 +17,33 @@ git clone https://github.com/pxl-pshr/ComfyUI-MiniMaxH3-Loop
 ```
 
 Requires ComfyUI v0.42.0 or newer. The example workflows show up in ComfyUI's template browser. They also use [ComfyUI-Frame-Interpolation](https://github.com/Fannovel16/ComfyUI-Frame-Interpolation) (Loop Interpolate), and the Control workflow uses [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) (Load Video Path).
+
+## Getting a clean loop
+
+The node makes the model join the end of the clip to its start. Whether that join is invisible depends mostly on the prompt. Describe a **state that keeps going**, not a sequence of events, and ask of every prompt: *if this clip played twice in a row, would the joint show?*
+
+- **Locked-off camera:** `Locked-off static camera, no pan, no zoom.`
+- **One large, clear subject doing one continuous or cyclic thing:** pulsing, rotating, swaying, drifting, orbiting, breathing.
+- **Steady light, environment and sound:** a fixed setting and a steady ambient `overall_soundscape:`.
+- **Nothing that piles up.** Spilled liquid, crumbs, footprints and growing puddles reset at the loop point. Describe the end state as already there from the first frame (`the tabletop is already glossy and wet from the very first frame`) instead of letting it build.
+- **No timelines or one-way changes:** no `[0s-2s]`, no "then" or "finally", no single events like a bite or a blink.
+- **Fine turbulent texture** (blowing sand, rain streaks, smoke, spray) can change pattern at the loop point. Keep it subtle or secondary to the main subject.
+
+Settings matter as much as the words:
+
+- **25 steps without the turbo LoRA** is the smoothest on fast motion. The LoRA and FastH3 are fine for drafts and slow subjects but can judder on fast ones.
+- **A reference image** (`<Picture 1>`) holds the subject and look. Avoid first/last-frame anchors: H3 reads a pinned frame as a shot start and the loop point can jump.
+- **Try several seeds.** On the same prompt the seed decides more than you would expect; pops that look like seam problems are usually the model and show up in a plain render with that seed too.
+- **ControlNet** for camera travel or exact repeating geometry: your own loop fixes the geometry and H3 restyles it. See [Restyling a loop with ControlNet](#restyling-a-loop-with-controlnet).
+
+**[PROMPTING.md](PROMPTING.md)** is the full guide: format, structure, camera travel through repeating spaces, sound, reference images, a checklist, a before/after rewrite, and example prompts. It is also written to work as instructions for an LLM: give it the file and your rough idea ("jellyfish loop, moody") and it will write a prompt that follows these rules. With a reference image, give the LLM the image too.
+
+## Nodes
+
+- **MiniMax H3 Loop** (model patch): samples the latent with its end wrapped around to its start, so the model joins the end to the start like any other part of the video. `views` 2 (default) also samples a half-rotated view and takes the audio around the loop point from it, which keeps the sound clean there; costs about 1.8× sampling time. Use `views` 1 with the Fun ControlNet.
+- **MiniMax H3 Loop Decode**: decodes the loop with wrapped context on both sides and outputs exactly one loop of frames and audio.
+- **MiniMax H3 Loop Control Video**: fits an existing seamless loop (for example a 3D depth pass) to the H3 loop as the control video for Apply MiniMax H3 Fun ControlNet. See [Restyling a loop with ControlNet](#restyling-a-loop-with-controlnet).
+- **Loop Interpolate**: FILM or RIFE frame interpolation across the whole loop, including the frames between the last frame and the first. Outputs the new fps for Create Video. Needs [ComfyUI-Frame-Interpolation](https://github.com/Fannovel16/ComfyUI-Frame-Interpolation).
 
 ## Example workflows
 
@@ -78,7 +98,7 @@ MiniMax H3 Loop → BasicGuider / BasicScheduler → SamplerCustomAdvanced → M
 | 311 | 306 | 12.75 |
 | 362 | 357 | 14.9 |
 
-**Prompt:** see [Prompting](#prompting) and [PROMPTING.md](PROMPTING.md).
+**Prompt:** see [Getting a clean loop](#getting-a-clean-loop).
 
 **Reference image:** connect it to MiniMax H3 Reference to Video and refer to it as `<Picture 1>`. In our tests this kept the subject and look, and loop points were about as clean as text-to-video.
 
@@ -101,20 +121,6 @@ Control loop (Load Video) → MiniMax H3 Loop Control Video → Apply MiniMax H3
 - Prompt the geometry the control shows, then the look.
 
 `example_workflows/MiniMax-H3-Loop-Control.json` has it wired up. Point its Load Video node at your own loop.
-
-## Prompting
-
-A loop has to end where it started, so describe a state that keeps going, not a sequence of events:
-
-- A locked-off camera: `Locked-off static camera, no pan, no zoom.`
-- One large, clear subject doing one continuous or cyclic thing: pulsing, rotating, swaying, drifting, orbiting.
-- Steady light and environment, and a steady ambient `overall_soundscape:`.
-- No timelines (`[0s-2s]`, "then", "finally"), no one-way changes, no single events.
-- Fine turbulent texture (blowing sand, rain, smoke) can pop at the loop point.
-
-**[PROMPTING.md](PROMPTING.md)** is the full guide: format, structure, camera travel through repeating spaces, sound, reference images, a checklist, a before/after rewrite, and example prompts.
-
-**Optionally, give an LLM PROMPTING.md to expand your idea into a detailed loop prompt.** H3 rewards long, specific prompts, and an LLM can turn a rough idea ("jellyfish loop, moody") into one that follows these guidelines; the guide ends with a section written for that. With a reference image, also give the LLM the image so it can describe the subject and keep the prompt consistent with it.
 
 ## How it works
 
