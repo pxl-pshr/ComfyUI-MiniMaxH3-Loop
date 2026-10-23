@@ -31,7 +31,7 @@ The node makes the model join the end of the clip to its start. Whether that joi
 
 Settings matter as much as the words:
 
-- **25 steps without the turbo LoRA** is the smoothest on fast motion. The LoRA and FastH3 are fine for drafts and slow subjects but can judder on fast ones.
+- **25 steps without the turbo LoRA** is the smoothest on fast motion. Turbo v2 comes close at about a third of the time. The v1.0 turbo LoRA and FastH3 are fine for drafts and slow subjects but can judder on fast ones.
 - **A reference image** (`<Picture 1>`) holds the subject and look. Avoid first/last-frame anchors: H3 reads a pinned frame as a shot start and the loop point can jump.
 - **Try several seeds.** On the same prompt the seed decides more than you would expect; pops that look like seam problems are usually the model and show up in a plain render with that seed too.
 - **ControlNet** for camera travel or exact repeating geometry: your own loop fixes the geometry and H3 restyles it. See [Restyling a loop with ControlNet](#restyling-a-loop-with-controlnet).
@@ -52,20 +52,22 @@ All in `example_workflows/`. Each has a note with lengths, prompting tips and se
 | Workflow | Model | Steps | Time* |
 | --- | --- | --- | --- |
 | `MiniMax-H3-Loop.json` | ref2va | 25 | ~21 min |
-| `MiniMax-H3-Loop-Turbo.json` | ref2va + turbo LoRA | 8 | ~7 min |
+| `MiniMax-H3-Loop-Turbo.json` | ref2va + turbo LoRA v1.0 | 8 | ~7 min |
+| `MiniMax-H3-Loop-Turbo-v2.json` | ref2va + turbo LoRA v1.1 | 8 | ~7 min |
 | `MiniMax-H3-Loop-FastH3.json` | FastH3-Omni | 8 | ~7 min |
-| `MiniMax-H3-Loop-Control.json` | ref2va + turbo LoRA + Fun ControlNet | 8 | ~4 min |
+| `MiniMax-H3-Loop-Control.json` | ref2va + turbo LoRA v1.0 + Fun ControlNet | 8 | ~4 min |
 
 \*Per loop on an RTX 4090, 1280×704, length 107, `views` 2 (Control uses `views` 1). The workflows default to 1344×768 and length 158 (a 6.4 s loop), which takes a bit longer; the Control workflow defaults to length 107. The first three end in Loop Interpolate (FILM ×2, 48 fps).
 
 - **MiniMax-H3-Loop** (no LoRA): natural, photographic, the reference look. Smoothest on fast motion.
-- **Turbo** (ref2v turbo 8-step LoRA): the LoRA shifts the look, so the same seed gives a different shot. Fast motion can judder (every other frame nearly still), depending on seed.
+- **Turbo** (ref2v turbo 8-step LoRA v1.0): the LoRA shifts the look, so the same seed gives a different shot. Fast motion can judder (every other frame nearly still), depending on seed.
+- **Turbo v2** (ref2v turbo 8-step LoRA v1.1): same speed and similar look. In our tests it removed the v1.0 judder; the loop point can move a little faster than the rest of the clip.
 - **FastH3** ([FastH3-Omni](https://huggingface.co/FastVideo/FastH3-Omni-Comfy), `fasth3_omniref_8step_pruned_int8_convrot.safetensors`): close to the 25-step look with a reference image, a bit punchier; text-only prompts give a different shot. Slight judder on fast motion; slow flows stay smooth.
 - **Control** (Fun ControlNet): restyles an existing loop; geometry and timing come from your control video.
 
 FastH3-Omni stores per-step output heads and needs ComfyUI v0.42.0 or newer. Older versions fail with "size of tensor a (24) must match the size of tensor b (768)".
 
-A good split: FastH3 or Turbo for drafts and slow-moving subjects, 25 steps for finals with fast motion.
+A good split: Turbo v2 or FastH3 for drafts, 25 steps for finals with fast motion.
 
 ### Models
 
@@ -73,9 +75,10 @@ The workflows carry these download links, so ComfyUI offers to download any that
 
 | File | Folder | Used by |
 | --- | --- | --- |
-| [minimax_h3_ref2va_pruned_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors) | `diffusion_models` | Loop, Turbo, Control |
+| [minimax_h3_ref2va_pruned_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors) | `diffusion_models` | Loop, Turbo, Turbo v2, Control |
 | [fasth3_omniref_8step_pruned_int8_convrot.safetensors](https://huggingface.co/FastVideo/FastH3-Omni-Comfy/resolve/main/diffusion_models/fasth3_omniref_8step_pruned_int8_convrot.safetensors) | `diffusion_models` | FastH3 |
 | [minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors](https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors) | `loras` | Turbo, Control |
+| [minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors](https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors) | `loras` | Turbo v2 |
 | [qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors) | `text_encoders` | all |
 | [minimax_h3_video_vae_fp16.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors) | `vae` | all |
 | [minimax_h3_audio_vae_fp32.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors) | `vae` | all |

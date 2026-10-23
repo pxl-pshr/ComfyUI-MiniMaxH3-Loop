@@ -1,0 +1,1007 @@
+{
+ "last_node_id": 23,
+ "last_link_id": 23,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "UNETLoader",
+   "pos": [
+    500,
+    0
+   ],
+   "size": [
+    420,
+    90
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      1
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "UNETLoader",
+    "models": [
+     {
+      "name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "directory": "diffusion_models"
+     }
+    ]
+   },
+   "widgets_values": [
+    "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+    "default"
+   ]
+  },
+  {
+   "id": 2,
+   "type": "LoraLoaderModelOnly",
+   "pos": [
+    500,
+    136
+   ],
+   "size": [
+    420,
+    90
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 1
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      2
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LoraLoaderModelOnly",
+    "models": [
+     {
+      "name": "minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors",
+      "url": "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors",
+      "directory": "loras"
+     }
+    ]
+   },
+   "widgets_values": [
+    "minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors",
+    1.0
+   ]
+  },
+  {
+   "id": 3,
+   "type": "MiniMaxH3Loop",
+   "pos": [
+    500,
+    272
+   ],
+   "size": [
+    420,
+    90
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 2
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      3,
+      4
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "MiniMaxH3Loop"
+   },
+   "widgets_values": [
+    1,
+    2
+   ]
+  },
+  {
+   "id": 4,
+   "type": "CLIPLoader",
+   "pos": [
+    500,
+    408
+   ],
+   "size": [
+    420,
+    110
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      5
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "CLIPLoader",
+    "models": [
+     {
+      "name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "directory": "text_encoders"
+     }
+    ]
+   },
+   "widgets_values": [
+    "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+    "minimax",
+    "default"
+   ]
+  },
+  {
+   "id": 5,
+   "type": "VAELoader",
+   "pos": [
+    500,
+    564
+   ],
+   "size": [
+    420,
+    60
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      6,
+      17
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAELoader",
+    "models": [
+     {
+      "name": "minimax_h3_video_vae_fp16.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors",
+      "directory": "vae"
+     }
+    ]
+   },
+   "widgets_values": [
+    "minimax_h3_video_vae_fp16.safetensors"
+   ],
+   "title": "Video VAE"
+  },
+  {
+   "id": 6,
+   "type": "VAELoader",
+   "pos": [
+    500,
+    670
+   ],
+   "size": [
+    420,
+    60
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      7,
+      18
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAELoader",
+    "models": [
+     {
+      "name": "minimax_h3_audio_vae_fp32.safetensors",
+      "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors",
+      "directory": "vae"
+     }
+    ]
+   },
+   "widgets_values": [
+    "minimax_h3_audio_vae_fp32.safetensors"
+   ],
+   "title": "Audio VAE"
+  },
+  {
+   "id": 7,
+   "type": "LoadImage",
+   "pos": [
+    500,
+    776
+   ],
+   "size": [
+    420,
+    330
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 4,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      8
+     ]
+    },
+    {
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "example.png",
+    "image"
+   ],
+   "title": "Reference image (<Picture 1>)"
+  },
+  {
+   "id": 8,
+   "type": "PrimitiveStringMultiline",
+   "pos": [
+    960,
+    0
+   ],
+   "size": [
+    460,
+    300
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "STRING",
+     "type": "STRING",
+     "links": [
+      9
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "PrimitiveStringMultiline"
+   },
+   "widgets_values": [
+    "Locked-off static camera, no pan, no zoom. Deep blue ocean at night. A large glowing jellyfish pulses rhythmically in the center of frame, its bell contracting and relaxing in a steady cycle, long luminous tendrils trailing and swaying. Tiny specks of marine snow drift slowly upward through soft shafts of light. Continuous, smooth, unbroken motion throughout.\n\noverall_soundscape: deep underwater ambience, a soft low hum, gentle muffled water movement.\n\nnon_diegetic_music: N/A"
+   ],
+   "title": "Prompt"
+  },
+  {
+   "id": 9,
+   "type": "MiniMaxH3ReferenceToVideo",
+   "pos": [
+    960,
+    346
+   ],
+   "size": [
+    460,
+    350
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 5
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 6,
+     "shape": 7
+    },
+    {
+     "name": "audio_vae",
+     "type": "VAE",
+     "link": 7,
+     "shape": 7
+    },
+    {
+     "name": "ref_images.ref_image_0",
+     "type": "IMAGE",
+     "link": 8,
+     "shape": 7,
+     "label": "ref_image_0"
+    },
+    {
+     "name": "prompt",
+     "type": "STRING",
+     "link": 9,
+     "widget": {
+      "name": "prompt"
+     }
+    }
+   ],
+   "outputs": [
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "links": [
+      10
+     ]
+    },
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      11
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "MiniMaxH3ReferenceToVideo"
+   },
+   "widgets_values": [
+    "",
+    1344,
+    768,
+    158,
+    "match"
+   ]
+  },
+  {
+   "id": 10,
+   "type": "RandomNoise",
+   "pos": [
+    1460,
+    0
+   ],
+   "size": [
+    320,
+    90
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "NOISE",
+     "type": "NOISE",
+     "links": [
+      12
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "RandomNoise"
+   },
+   "widgets_values": [
+    42,
+    "fixed"
+   ]
+  },
+  {
+   "id": 11,
+   "type": "KSamplerSelect",
+   "pos": [
+    1460,
+    136
+   ],
+   "size": [
+    320,
+    60
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SAMPLER",
+     "type": "SAMPLER",
+     "links": [
+      14
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "KSamplerSelect"
+   },
+   "widgets_values": [
+    "res_multistep"
+   ]
+  },
+  {
+   "id": 12,
+   "type": "BasicScheduler",
+   "pos": [
+    1460,
+    242
+   ],
+   "size": [
+    320,
+    110
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 3
+    }
+   ],
+   "outputs": [
+    {
+     "name": "SIGMAS",
+     "type": "SIGMAS",
+     "links": [
+      15
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "BasicScheduler"
+   },
+   "widgets_values": [
+    "simple",
+    8,
+    1.0
+   ]
+  },
+  {
+   "id": 13,
+   "type": "BasicGuider",
+   "pos": [
+    1460,
+    398
+   ],
+   "size": [
+    320,
+    50
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 4
+    },
+    {
+     "name": "conditioning",
+     "type": "CONDITIONING",
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "name": "GUIDER",
+     "type": "GUIDER",
+     "links": [
+      13
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "BasicGuider"
+   }
+  },
+  {
+   "id": 14,
+   "type": "SamplerCustomAdvanced",
+   "pos": [
+    1460,
+    494
+   ],
+   "size": [
+    320,
+    110
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "noise",
+     "type": "NOISE",
+     "link": 12
+    },
+    {
+     "name": "guider",
+     "type": "GUIDER",
+     "link": 13
+    },
+    {
+     "name": "sampler",
+     "type": "SAMPLER",
+     "link": 14
+    },
+    {
+     "name": "sigmas",
+     "type": "SIGMAS",
+     "link": 15
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 11
+    }
+   ],
+   "outputs": [
+    {
+     "name": "output",
+     "type": "LATENT",
+     "links": [
+      16
+     ]
+    },
+    {
+     "name": "denoised_output",
+     "type": "LATENT",
+     "links": []
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SamplerCustomAdvanced"
+   }
+  },
+  {
+   "id": 15,
+   "type": "MiniMaxH3LoopDecode",
+   "pos": [
+    1820,
+    0
+   ],
+   "size": [
+    300,
+    120
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 16
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 17
+    },
+    {
+     "name": "audio_vae",
+     "type": "VAE",
+     "link": 18
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      19
+     ]
+    },
+    {
+     "name": "AUDIO",
+     "type": "AUDIO",
+     "links": [
+      22
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "MiniMaxH3LoopDecode"
+   },
+   "widgets_values": [
+    1
+   ]
+  },
+  {
+   "id": 20,
+   "type": "CreateVideo",
+   "pos": [
+    1820,
+    342
+   ],
+   "size": [
+    300,
+    150
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 20
+    },
+    {
+     "name": "audio",
+     "type": "AUDIO",
+     "link": 22,
+     "shape": 7
+    },
+    {
+     "name": "fps",
+     "type": "FLOAT",
+     "link": 21,
+     "widget": {
+      "name": "fps"
+     }
+    }
+   ],
+   "outputs": [
+    {
+     "name": "VIDEO",
+     "type": "VIDEO",
+     "links": [
+      23
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "CreateVideo"
+   },
+   "widgets_values": [
+    48,
+    "auto",
+    "sRGB",
+    "none"
+   ]
+  },
+  {
+   "id": 21,
+   "type": "SaveVideo",
+   "pos": [
+    2160,
+    0
+   ],
+   "size": [
+    800,
+    600
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "video",
+     "type": "VIDEO",
+     "link": 23
+    }
+   ],
+   "outputs": [
+    {
+     "name": "video",
+     "type": "VIDEO",
+     "links": []
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "SaveVideo"
+   },
+   "widgets_values": [
+    "video/MiniMaxH3_Loop",
+    "auto",
+    "auto"
+   ]
+  },
+  {
+   "id": 22,
+   "type": "MarkdownNote",
+   "pos": [
+    0,
+    0
+   ],
+   "size": [
+    460,
+    790
+   ],
+   "flags": {},
+   "order": 18,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "properties": {
+    "Node name for S&R": "MarkdownNote"
+   },
+   "widgets_values": [
+    "## MiniMax H3 Loop (turbo v2: 8-step LoRA v1.1, 8 steps)\n\nSame as the Turbo workflow with the newer v1.1 turbo LoRA. In our tests it removed the every-other-frame judder the v1.0 LoRA could show on fast motion, at the same speed.\n\nSeamless loop without first/last frames. **MiniMax H3 Loop** samples the latent with its end wrapped around to its start, so the model joins the end to the start like any other cut-free stretch of video.\n\n**Length** must be 17k+5 frames. The loop is 17k frames:\n\n| length | loop | seconds |\n|---|---|---|\n| 107 | 102 | 4.25 |\n| 158 | 153 | 6.4 |\n| 209 | 204 | 8.5 |\n| 260 | 255 | 10.6 |\n| 311 | 306 | 12.75 |\n| 362 | 357 | 14.9 |\n\nThese keep the audio loop exact. `pad_clips` adds 17 frames of wrapped context on each side while sampling, with `pad_clips` 1, 311 becomes 345 frames (within H3's 362-frame maximum) and 362 becomes 396 (past it), and longer runs are slower.\n\n**Prompt:** a loop has to end where it started.\n- Start with `Locked-off static camera, no pan, no zoom.`\n- One continuous or repeating action on a large, clear subject: pulsing, rotating, swaying, drifting, orbiting.\n- Keep light and environment steady. End with `Continuous, smooth, unbroken motion throughout.`\n- Avoid `[0s-2s]` timelines, \"then\"/\"begins\"/\"finally\", and one-way changes (lights switching on, things appearing, camera moves).\n- Fine turbulent texture (blowing sand, rain streaks, smoke) can pop at the loop point. Keep it secondary or try another seed.\n- Steady ambient sound loops invisibly; a single sound event repeats every loop.\n\nSee PROMPTING.md in the pack for the full guide and example prompts.\n\n**Reference image:** un-bypass Load Image and refer to it as `<Picture 1>` in the prompt. Prefer it to first/last frame or Add Guide anchors, which can make the loop point jump and the exposure drift.\n\n**Decode:** MiniMax H3 Loop Decode decodes with wrapped context on both sides and outputs exactly one loop of frames and audio.\n\n**Smoothing:** Loop Interpolate runs FILM or RIFE across the whole loop, including the last-to-first frames, and sets the video fps (24 x multiplier). H3 always generates at 24 fps; don't just raise the fps in Create Video, that only speeds the clip up.\n\n**Models** (put each in `ComfyUI/models/<folder>`; ComfyUI also offers to download missing ones):\n- `diffusion_models`: [minimax_h3_ref2va_pruned_int8_convrot.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors)\n- `loras`: [minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors](https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors)\n- `text_encoders`: [qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors)\n- `vae`: [minimax_h3_video_vae_fp16.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors)\n- `vae`: [minimax_h3_audio_vae_fp32.safetensors](https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_audio_vae_fp32.safetensors)"
+   ],
+   "title": "Note: MiniMax H3 Loop"
+  },
+  {
+   "id": 23,
+   "type": "LoopInterpolate",
+   "pos": [
+    1820,
+    166
+   ],
+   "size": [
+    300,
+    130
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 19
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      20
+     ]
+    },
+    {
+     "name": "fps",
+     "type": "FLOAT",
+     "links": [
+      21
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LoopInterpolate"
+   },
+   "widgets_values": [
+    "FILM",
+    2,
+    24.0
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   1,
+   0,
+   2,
+   0,
+   "MODEL"
+  ],
+  [
+   2,
+   2,
+   0,
+   3,
+   0,
+   "MODEL"
+  ],
+  [
+   3,
+   3,
+   0,
+   12,
+   0,
+   "MODEL"
+  ],
+  [
+   4,
+   3,
+   0,
+   13,
+   0,
+   "MODEL"
+  ],
+  [
+   5,
+   4,
+   0,
+   9,
+   0,
+   "CLIP"
+  ],
+  [
+   6,
+   5,
+   0,
+   9,
+   1,
+   "VAE"
+  ],
+  [
+   7,
+   6,
+   0,
+   9,
+   2,
+   "VAE"
+  ],
+  [
+   8,
+   7,
+   0,
+   9,
+   3,
+   "IMAGE"
+  ],
+  [
+   9,
+   8,
+   0,
+   9,
+   4,
+   "STRING"
+  ],
+  [
+   10,
+   9,
+   0,
+   13,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   11,
+   9,
+   1,
+   14,
+   4,
+   "LATENT"
+  ],
+  [
+   12,
+   10,
+   0,
+   14,
+   0,
+   "NOISE"
+  ],
+  [
+   13,
+   13,
+   0,
+   14,
+   1,
+   "GUIDER"
+  ],
+  [
+   14,
+   11,
+   0,
+   14,
+   2,
+   "SAMPLER"
+  ],
+  [
+   15,
+   12,
+   0,
+   14,
+   3,
+   "SIGMAS"
+  ],
+  [
+   16,
+   14,
+   0,
+   15,
+   0,
+   "LATENT"
+  ],
+  [
+   17,
+   5,
+   0,
+   15,
+   1,
+   "VAE"
+  ],
+  [
+   18,
+   6,
+   0,
+   15,
+   2,
+   "VAE"
+  ],
+  [
+   19,
+   15,
+   0,
+   23,
+   0,
+   "IMAGE"
+  ],
+  [
+   20,
+   23,
+   0,
+   20,
+   0,
+   "IMAGE"
+  ],
+  [
+   21,
+   23,
+   1,
+   20,
+   2,
+   "FLOAT"
+  ],
+  [
+   22,
+   15,
+   1,
+   20,
+   1,
+   "AUDIO"
+  ],
+  [
+   23,
+   20,
+   0,
+   21,
+   0,
+   "VIDEO"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.8,
+   "offset": [
+    40,
+    40
+   ]
+  }
+ },
+ "version": 0.4
+}

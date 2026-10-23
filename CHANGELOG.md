@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- Example workflow `MiniMax-H3-Loop-Turbo-v2.json`: the Turbo workflow with the v1.1 ref2v turbo LoRA, which removed the v1.0 judder on fast motion in our tests.
+
 ## 1.0.1
 
 - The padding's fresh noise is drawn on the CPU like the sampler's own noise, so a seed gives the same result on every device.
