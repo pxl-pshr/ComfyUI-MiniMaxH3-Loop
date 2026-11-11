@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0
+
+- **MiniMax H3 Loop**: new `rotate` option, on by default. With `views` 1 the wrap point moves on by one 17-frame clip with every sampling step instead of sitting at the loop's start throughout. With a fixed wrap point the motion could jump at the loop point; in our tests (18 loops, FastH3 and stock H3, same prompt and seed with and without) the 8 loops with a clear jump all improved, from a median of 4.3× a typical frame-to-frame change to 1.5×, at no cost in sampling time. Loops that were already clean stayed about the same, a few slightly worse. `views` 2 and the Fun ControlNet are unchanged.
+- With `views` 1, a seed now gives a different video than in 1.0.x. Turn `rotate` off to get the old result.
+
 ## 1.0.2
 
 - Example workflow `MiniMax-H3-Loop-Turbo-v2.json`: the Turbo workflow with the v1.1 ref2v turbo LoRA, which removed the v1.0 judder on fast motion in our tests.

@@ -85,7 +85,10 @@ def loop_wrapper(executor, x, timestep, context, transformer_options, **kwargs):
                        timestep, context, transformer_options, **args)
         return out[0][:, :, pv:pv + n].roll(-sv, dims=2), out[1][..., pa:pa + na].roll(-sa, dims=-1)
 
-    v, a = view(0)
+    # with one view, the wrap point moves on by one clip with every sampling step: where it stays put, each step
+    # joins the loop's end to its start through the same noisy copy, and the motion picks up a jump there
+    step = transformer_options.get("minimax_h3_loop_step")
+    v, a = view(step(transformer_options["sigmas"]) % clips if step else 0)
     if transformer_options["minimax_h3_loop_views"] == 2 and clips > 1:
         # a fixed second view with its wrap point half a loop away: H3 garbles audio next to the
         # duplicated wrap context, so each audio position takes its prediction mostly from the view
@@ -105,8 +108,13 @@ def has_fun_controlnet(wrappers):
 def loop_sampler_wrapper(executor, guider, sigmas, extra_args, callback, noise, *args, **kwargs):
     model_options = extra_args["model_options"]
     transformer_options = model_options["transformer_options"]
-    if transformer_options["minimax_h3_loop_views"] == 2 and has_fun_controlnet(
-            comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, model_options, is_model_options=True)):
+    controlnet = has_fun_controlnet(
+        comfy.patcher_extension.get_all_wrappers(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, model_options, is_model_options=True))
+    transformer_options["minimax_h3_loop_step"] = None
+    if transformer_options.get("minimax_h3_loop_rotate") and transformer_options["minimax_h3_loop_views"] == 1 and not controlnet:
+        schedule = sigmas[:-1].detach().float().cpu()
+        transformer_options["minimax_h3_loop_step"] = lambda sigma: int((schedule - float(sigma.flatten()[0])).abs().argmin())
+    if transformer_options["minimax_h3_loop_views"] == 2 and controlnet:
         # the Fun ControlNet encodes one unrotated control latent, which a rotated view would misalign
         raise ValueError("MiniMax H3 Loop views 2 can't be combined with the Fun ControlNet; set views to 1.")
 
@@ -135,6 +143,8 @@ class MiniMaxH3Loop:
         }, "optional": {
             "views": ("INT", {"default": 2, "min": 1, "max": 2,
                               "tooltip": "2 also samples the loop rotated by half and takes the audio around the loop point from it. Fixes garbled audio there; about 1.8x sampling time. Not usable with the Fun ControlNet."}),
+            "rotate": ("BOOLEAN", {"default": True,
+                                   "tooltip": "With views 1: move the wrap point on by one 17-frame clip with every sampling step, which removes most of the jump in motion at the loop point. No effect with views 2 or the Fun ControlNet."}),
         }}
 
     RETURN_TYPES = ("MODEL",)
@@ -142,7 +152,7 @@ class MiniMaxH3Loop:
     CATEGORY = "model/patch/minimax"
     DESCRIPTION = "Generate a seamless loop by sampling the latent with its end wrapped around to its start. Set the latent length to 17k+5 frames (107, 158, 209, 260, 311, 362); the loop is 17k frames. Decode with MiniMax H3 Loop Decode."
 
-    def patch(self, model, pad_clips, views=2):
+    def patch(self, model, pad_clips, views=2, rotate=True):
         # the Fun ControlNet sizes its control latent from the input it sees, so it has to
         # sit inside the loop padding: this patch must be applied first
         if has_fun_controlnet(model.get_all_wrappers(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL)):
@@ -150,6 +160,7 @@ class MiniMaxH3Loop:
         model = model.clone()
         model.model_options["transformer_options"]["minimax_h3_loop_pad_clips"] = pad_clips
         model.model_options["transformer_options"]["minimax_h3_loop_views"] = views
+        model.model_options["transformer_options"]["minimax_h3_loop_rotate"] = rotate
         model.add_wrapper_with_key(comfy.patcher_extension.WrappersMP.DIFFUSION_MODEL, "minimax_h3_loop", loop_wrapper)
         model.add_wrapper_with_key(comfy.patcher_extension.WrappersMP.SAMPLER_SAMPLE, "minimax_h3_loop", loop_sampler_wrapper)
         return (model,)

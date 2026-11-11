@@ -40,7 +40,7 @@ Settings matter as much as the words:
 
 ## Nodes
 
-- **MiniMax H3 Loop** (model patch): samples the latent with its end wrapped around to its start, so the model joins the end to the start like any other part of the video. `views` 2 (default) also samples a half-rotated view and takes the audio around the loop point from it, which keeps the sound clean there; costs about 1.8× sampling time. Use `views` 1 with the Fun ControlNet.
+- **MiniMax H3 Loop** (model patch): samples the latent with its end wrapped around to its start, so the model joins the end to the start like any other part of the video. `views` 2 (default) also samples a half-rotated view and takes the audio around the loop point from it, which keeps the sound clean there; costs about 1.8× sampling time. Use `views` 1 with the Fun ControlNet. `rotate` (on by default, `views` 1 only) moves the wrap point on by one clip with every sampling step, which removes most of the jump in motion at the loop point.
 - **MiniMax H3 Loop Decode**: decodes the loop with wrapped context on both sides and outputs exactly one loop of frames and audio.
 - **MiniMax H3 Loop Control Video**: fits an existing seamless loop (for example a 3D depth pass) to the H3 loop as the control video for Apply MiniMax H3 Fun ControlNet. See [Restyling a loop with ControlNet](#restyling-a-loop-with-controlnet).
 - **Loop Interpolate**: FILM or RIFE frame interpolation across the whole loop, including the frames between the last frame and the first. Outputs the new fps for Create Video. Needs [ComfyUI-Frame-Interpolation](https://github.com/Fannovel16/ComfyUI-Frame-Interpolation).
@@ -132,6 +132,8 @@ H3 latents come in 17-frame clips of 5 latent frames. Each model call sees the l
 Padding adds sampling time: about 34% at 209 frames with `pad_clips` 1. It also extends what the model sees by 17 frames per padding clip on each side: with `pad_clips` 1, length 311 becomes 345 frames, within H3's 362-frame maximum, while 362 becomes 396 and runs past it.
 
 With one view, the loop's first and last ~0.7 s are duplicated as wrap context at the same place on every step, and H3's audio stream turns loud and garbled there (3–10× the clip's normal level). `views` 2 also samples the loop rotated by half, with its wrap point mid-loop, and blends the two audio predictions by distance from each view's wrap point. Both views run on every step, so nothing changes from step to step. The picture comes from the first view only: when both views were blended, they could settle on opposite directions of motion (particles streaming right in one, left in the other), which reversed the motion mid-loop.
+
+With `views` 1 and a wrap point that stays at the loop's start, the motion could jump there: the loop point changed 2–5× as much as a typical frame step, while H3's other clip boundaries stayed near 1×. Moving the wrap point half a loop in moved the jump with it, so it comes from the sampling, not from the prompt or the decode. `rotate` therefore moves the wrap point on by one clip with every sampling step, so no frame is the join on every step. In our tests, loops with a clear jump dropped from a median of 4.3× to 1.5×, and loops that were already clean stayed about the same. It isn't applied with `views` 2 or the Fun ControlNet, and we haven't tested what it does to the audio of a `views` 1 loop.
 
 The padding repeats the loop's own latent, so it gets fresh noise in place of the copied noise: seeing the same noise twice made distilled models such as FastH3 draw white specks, densest near the loop point.
 
